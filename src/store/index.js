@@ -4,8 +4,13 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
+  state: { arr: { year: 20, great: 10 } },
   mutations: {},
   actions: {},
-  modules: {}
+  modules: {},
+  getters: {
+    arr: state => {
+      return state.arr;
+    }
+  }
 });
