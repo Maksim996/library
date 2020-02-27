@@ -24,6 +24,9 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row >
+        <v-btn small @click="compare()">Порівняти</v-btn>
+    </v-row>
     <v-row 
       no-gutters
     >
@@ -31,7 +34,6 @@
       <v-tabs 
         fixed-tabs
         background-color="indigo"
-        dark
         v-model="tab"
       >
       <v-tab href="#one_table">
@@ -44,13 +46,13 @@
     <v-tabs-items v-model="tab">
       <v-tab-item value="one_table">
         <v-card>
-          <v-btn small @click="deleteDuplicate(one_table)">Видалення дублікатів</v-btn>
+          <v-btn small @click="deleteDuplicate('one_table')">Видалення дублікатів</v-btn>
           <Table :data="one_table"></Table>
         </v-card>
       </v-tab-item>
       <v-tab-item value="two_table">
         <v-card>
-          <v-btn small @click="deleteDuplicate(two_table)">Видалення дублікатів</v-btn>
+          <v-btn small @click="deleteDuplicate('two_table')">Видалення дублікатів</v-btn>
           <Table :data="two_table"></Table>
         </v-card>
       </v-tab-item>
@@ -78,7 +80,18 @@ export default {
   components: {
     Table
   },
+  created() {
+    this.initialize();
+  },
   methods: {
+    initialize () {
+      if(sessionStorage.getItem('one_table')) {
+        this.one_table = JSON.parse(sessionStorage.getItem('one_table'));
+      }
+      if(sessionStorage.getItem('two_table')) {
+        this.two_table = JSON.parse(sessionStorage.getItem('two_table'));
+      }
+    },
     readFileAsync(file) {
         return new Promise((resolve, reject) => {
             let reader = new FileReader();
@@ -107,7 +120,6 @@ export default {
             title: item["Назва"]
           }
         })
-        console.log(this.one_table)
       }
     },
 
@@ -121,15 +133,28 @@ export default {
             title: item["Дисципліна"]
           }
         })
-        console.log(this.two_table)
       }
     },
-  },
+    deleteDuplicate(array) {
+      this[array] = this[array].sort(function(a,b){return a.title < b.title ? -1 : 1;}).reduce(function(arr, el) {
+        if(!arr.length || arr[arr.length - 1].title != el.title) {
+            arr.push(el);
+        }
+        return arr;
+      }, []);
+    },
+    compare(){
+          sessionStorage.setItem('one_table', JSON.stringify(this.one_table));
+          sessionStorage.setItem('two_table', JSON.stringify(this.two_table));
+      // this.$store.commit('one_table', array1);
+      // this.$store.commit('two_table', array2);
+    },
 
-  deleteDuplicate(array) {
-    array.filter((item, index) => {
-      array.indexOf()
-    })
+
+  },
+  computed: {
+    
   }
+  
 };
 </script>
