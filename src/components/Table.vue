@@ -1,7 +1,7 @@
 <template>
     <v-data-table
         :headers="headers"
-        :loading="true"
+        :loading="loading"
         :loading-text="loading ? 'Завантаження' : ''"
         :items="data"
         class="elevation-1"
@@ -34,7 +34,7 @@ export default {
         data: Array
     },
     data: () => ({
-        loading: true,
+        loading: false,
         headers: [
         {
             text: '№',

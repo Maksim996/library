@@ -1,14 +1,8 @@
 <template>
-  <v-container class="grey lighten-5">
-    <v-row 
-      no-gutters
-    >
+  <v-container>
+    <v-row>
     <v-col lg="12" md="12" sm="12" xs="12">
-      <v-tabs 
-        fixed-tabs
-        background-color="indigo"
-        dark
-        v-model="tab"
+      <v-tabs  grow v-model="tab"
       >
       <v-tab href="#one_table">
         1 table
@@ -45,11 +39,9 @@
 <script>
 import Table from '../components/Table.vue'
   export default {
-
     data () {
       return {
         tab: null,
-
         one_table: [],
         two_table: [],
         three_table: [],
@@ -65,20 +57,21 @@ import Table from '../components/Table.vue'
       compareSort (){
         var array1 = JSON.parse(sessionStorage.getItem('one_table'));
         var array2 = JSON.parse(sessionStorage.getItem('two_table'));
-        for ( let i = 0; i < array1.length; i++){
-          for (let j = 0; j < array2.length; j++ ){
-            if(array1[i].title === array2[j].title ){
-                this.one_table.push(array2[j]);
-                array1.splice(i,1);
-                array2.splice(j,1);
-                break;
+        if(array1 && array2) {
+            for ( let i = 0; i < array1.length; i++){
+            for (let j = 0; j < array2.length; j++ ){
+                if(array1[i].title === array2[j].title ){
+                    this.one_table.push(array2[j]);
+                    array1.splice(i,1);
+                    array2.splice(j,1);
+                    break;
+                }
             }
-          }
-        };
-        this.two_table = array1
-        this.three_table = array2
+            };
+            this.two_table = array1
+            this.three_table = array2
+        }
       },
     }
-
   }
 </script>

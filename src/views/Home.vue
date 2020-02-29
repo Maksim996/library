@@ -1,70 +1,62 @@
 <template>
-
-  <v-container class="grey lighten-5">
-    <v-row 
-      class='mb-6'
-      no-gutters
-    >
+  <v-container>
+    <v-row>
       <v-col>
-        <v-card
-          class="pa-2"
-          outlined
-          tile
-        >
-          <v-file-input type="file" @change="readFileLibrary($event)" multiple label="File input"></v-file-input>
+        <v-card class="pa-2">
+          <v-file-input 
+            type="file" 
+            @change="readFileLibrary($event)" 
+            multiple 
+            label="File input"
+          >
+          </v-file-input>
         </v-card>
       </v-col>
       <v-col>
-        <v-card
-          class="pa-2"
-          outlined
-          tile
-        >
-          <v-file-input @change="readFileASU($event)" multiple label="File input"></v-file-input>
+        <v-card class="pa-2">
+          <v-file-input 
+            @change="readFileASU($event)" 
+            multiple 
+            label="File input"
+          ></v-file-input>
         </v-card>
       </v-col>
     </v-row>
-    <v-row >
+    <v-row>
+      <v-col class="py-0">
         <v-btn small @click="compare()">Порівняти</v-btn>
+      </v-col>
     </v-row>
-    <v-row 
-      no-gutters
-    >
+    <v-row>
     <v-col lg="12" md="12" sm="12" xs="12">
-      <v-tabs 
-        fixed-tabs
-        background-color="indigo"
-        v-model="tab"
-      >
-      <v-tab href="#one_table">
-        1 table
-      </v-tab>
-      <v-tab href="#two_table">
-       2 table
-      </v-tab>
-    </v-tabs>
-    <v-tabs-items v-model="tab">
-      <v-tab-item value="one_table">
-        <v-card>
-          <v-btn small @click="deleteDuplicate('one_table')">Видалення дублікатів</v-btn>
-          <Table :data="one_table"></Table>
-        </v-card>
-      </v-tab-item>
-      <v-tab-item value="two_table">
-        <v-card>
-          <v-btn small @click="deleteDuplicate('two_table')">Видалення дублікатів</v-btn>
-          <Table :data="two_table"></Table>
-        </v-card>
-      </v-tab-item>
-    </v-tabs-items>
+      <v-tabs grow v-model="tab">
+        <v-tab href="#one_table">
+          1 table
+        </v-tab>
+        <v-tab href="#two_table">
+          2 table
+        </v-tab>
+      </v-tabs>
+      <v-tabs-items v-model="tab">
+        <v-tab-item value="one_table">
+          <v-card class="elevation-0">
+            <v-btn small @click="deleteDuplicate('one_table')" class="my-4">Видалення дублікатів</v-btn>
+            <Table :data="one_table"></Table>
+          </v-card>
+        </v-tab-item>
+        <v-tab-item value="two_table">
+          <v-card class="elevation-0">
+            <v-btn small @click="deleteDuplicate('two_table')" class="my-4">Видалення дублікатів</v-btn>
+            <Table :data="two_table"></Table>
+          </v-card>
+        </v-tab-item>
+      </v-tabs-items>
     </v-col>
     </v-row>
   </v-container>
-
 </template>
 
 <script>
-// @ is an alias to /src
 import XLSX from 'xlsx';
 import Table from '../components/Table.vue';
 
