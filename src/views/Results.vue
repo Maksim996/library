@@ -1,33 +1,65 @@
 <template>
   <v-container>
+
+   
     <v-row>
     <v-col lg="12" md="12" sm="12" xs="12">
       <v-tabs  grow v-model="tab"
       >
       <v-tab href="#one_table">
-        1 table
+        Збіжності
       </v-tab>
       <v-tab href="#two_table">
-       2 table
+       Унікальні предмети Бібліотеки 
       </v-tab>
       <v-tab href="#three_table">
-       2 table
+       Унікальні предмети АСУ
       </v-tab>
     </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item value="one_table">
         <v-card>
           <Table :data="one_table"></Table>
+          <v-row >
+            <v-btn 
+              :disabled="one_table.length == 0 && loading" 
+              :loading="loading"
+              small 
+              @click="downloadFile(one_table)"
+              >
+              Завантажити
+            </v-btn>
+          </v-row>
         </v-card>
       </v-tab-item>
       <v-tab-item value="two_table">
         <v-card>
           <Table :data="two_table"></Table>
+          <v-row >
+            <v-btn 
+              :disabled="two_table.length == 0" 
+              :loading="loading"
+              small 
+              @click="downloadFile(two_table) && loading"
+            >
+              Завантажити
+            </v-btn>
+          </v-row>
         </v-card>
       </v-tab-item>
        <v-tab-item value="three_table">
         <v-card>
           <Table :data="three_table"></Table>
+          <v-row >
+            <v-btn 
+              :disabled="three_table.length == 0 && loading" 
+              :loading="loading"
+              small 
+              @click="downloadFile(three_table)"
+            >
+              Завантажити
+            </v-btn>
+          </v-row>
         </v-card>
       </v-tab-item>
     </v-tabs-items>
@@ -37,6 +69,8 @@
 </template>
 
 <script>
+import XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import Table from '../components/Table.vue'
   export default {
     data () {
@@ -45,6 +79,8 @@ import Table from '../components/Table.vue'
         one_table: [],
         two_table: [],
         three_table: [],
+        loading: false,
+      
       }
     },
     components : {
@@ -72,6 +108,30 @@ import Table from '../components/Table.vue'
             this.three_table = array2
         }
       },
+      downloadFile( data) {
+          let initArr = [];
+          initArr.push(["Шифр", "Назва", "Розділ", "Характеристики", "ББК", "УДК"]);
+          data.map(item => {
+            var resItem = [];
+            resItem.push(item.id_code == "" ? "" : item.id_code, item.title)
+            return resItem;
+          }).map(item => initArr.push(item));
+
+          var wb = XLSX.utils.book_new();
+          wb.SheetNames.push("Повні збіжності");
+          var ws_data = initArr.map(e => e);
+          var ws = XLSX.utils.aoa_to_sheet(ws_data);
+          wb.Sheets["Повні збіжності"] = ws;
+          var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+          saveAs(new Blob([this.s2ab(wbout)],{type:"application/octet-stream"}), 'result.xlsx')
+      },
+      s2ab(s) {
+        var buf = new ArrayBuffer(s.length);
+        var view = new Uint8Array(buf);
+        for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+        return buf;
+      },
+    
     }
   }
 </script>

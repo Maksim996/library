@@ -7,7 +7,7 @@
             type="file" 
             @change="readFileLibrary($event)" 
             multiple 
-            label="File input"
+            label="Файл Бібліотеки"
           >
           </v-file-input>
         </v-card>
@@ -17,7 +17,7 @@
           <v-file-input 
             @change="readFileASU($event)" 
             multiple 
-            label="File input"
+            label="Файл АСУ"
           ></v-file-input>
         </v-card>
       </v-col>
@@ -29,28 +29,32 @@
     </v-row>
     <v-row>
     <v-col lg="12" md="12" sm="12" xs="12">
-      <v-tabs grow v-model="tab">
-        <v-tab href="#one_table">
-          1 table
-        </v-tab>
-        <v-tab href="#two_table">
-          2 table
-        </v-tab>
-      </v-tabs>
-      <v-tabs-items v-model="tab">
-        <v-tab-item value="one_table">
-          <v-card class="elevation-0">
-            <v-btn small @click="deleteDuplicate('one_table')" class="my-4">Видалення дублікатів</v-btn>
-            <Table :data="one_table"></Table>
-          </v-card>
-        </v-tab-item>
-        <v-tab-item value="two_table">
-          <v-card class="elevation-0">
-            <v-btn small @click="deleteDuplicate('two_table')" class="my-4">Видалення дублікатів</v-btn>
-            <Table :data="two_table"></Table>
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
+      <v-tabs 
+        fixed-tabs
+        background-color="indigo"
+        v-model="tab"
+      >
+      <v-tab href="#one_table">
+        Бібліотека
+      </v-tab>
+      <v-tab href="#two_table">
+       АСУ
+      </v-tab>
+    </v-tabs>
+    <v-tabs-items v-model="tab">
+      <v-tab-item value="one_table">
+        <v-card>
+          <v-btn small @click="deleteDuplicate('one_table')">Видалення дублікатів</v-btn>
+          <Table :data="one_table" :loading="loading"></Table>
+        </v-card>
+      </v-tab-item>
+      <v-tab-item value="two_table">
+        <v-card>
+          <v-btn small @click="deleteDuplicate('two_table')">Видалення дублікатів</v-btn>
+          <Table :data="two_table" :loading="loading"></Table>
+        </v-card>
+      </v-tab-item>
+    </v-tabs-items>
     </v-col>
     </v-row>
   </v-container>
@@ -66,7 +70,8 @@ export default {
     return {
       tab: null,
       one_table: [],
-      two_table: []
+      two_table: [],
+      loading: false
     }
   },
   components: {
@@ -86,6 +91,7 @@ export default {
     },
     readFileAsync(file) {
         return new Promise((resolve, reject) => {
+            
             let reader = new FileReader();
             reader.onload = (e) => {
                 var data = e.target.result;
@@ -99,11 +105,14 @@ export default {
             };
             reader.onerror = reject;
             reader.readAsBinaryString(file);
+           
         })
     },
 
     async readFileLibrary(event) {
       if(event[0]) {
+        this.loading = true;
+        // console.log(this.loading);
         let data = await this.readFileAsync(event[0]);
         this.one_table = await data.map((item, index) => {
           return {
@@ -112,10 +121,13 @@ export default {
             title: item["Назва"]
           }
         })
+                
+        this.loading = false;
       }
     },
 
     async readFileASU(event) {
+       this.loading = true;
       if(event[0]) {
         let data = await this.readFileAsync(event[0]);
         this.two_table = await data.map((item, index) => {
@@ -125,6 +137,7 @@ export default {
             title: item["Дисципліна"]
           }
         })
+        this.loading = false;
       }
     },
     deleteDuplicate(array) {
@@ -138,8 +151,6 @@ export default {
     compare(){
           sessionStorage.setItem('one_table', JSON.stringify(this.one_table));
           sessionStorage.setItem('two_table', JSON.stringify(this.two_table));
-      // this.$store.commit('one_table', array1);
-      // this.$store.commit('two_table', array2);
     },
 
 

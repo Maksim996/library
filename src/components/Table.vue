@@ -1,40 +1,80 @@
 <template>
-    <v-data-table
-        :headers="headers"
-        :loading="loading"
-        :loading-text="loading ? 'Завантаження' : ''"
-        :items="data"
-        class="elevation-1"
-    >
+    <div>
+        <v-dialog v-model="dialog" persistent max-width="600px">
+            <v-card>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-col cols="12">
+                                <!-- <v-text-field label="Шифр" v-model="modalData.id_code"></v-text-field> -->
+                                <v-text-field label="Назва" v-model="modalData.title"></v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="dialog = false">Закрити</v-btn>
+                    <v-btn color="blue darken-1" text @click="saveEdit">Зберегти</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-text-field
+            v-model="search"
+            clearable
+            flat
+            solo-inverted
+            hide-details
+            prepend-inner-icon="search"
+            label="Пошук"
+          ></v-text-field>
 
-        <template v-slot:item.action="{ item }">
-            <v-tooltip top>
-                <template v-slot:activator="{ on }">
-                    <v-icon small class="mx-2" @click="edit(item)" v-on="on">edit</v-icon>
-                </template>
-                <span>Редагувати</span>
-            </v-tooltip>
+        <v-data-table
+            :headers="headers"
+            :loading="loading"
+            :loading-text="loading ? 'Завантаження' : ''"
+            :items="data"
+            :search="search"
+            :footer-props="{'items-per-page-text': 'Рядків на сторінку:', 'items-per-page-all-text': 'Всі'}"
+            class="elevation-1"
+        >
+        
+            <template v-slot:item.action="{ item }" v-if='url =="/"' >
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-icon small class="mx-2" @click="edit(item)" v-on="on">edit</v-icon>
+                    </template>
+                    <span>Редагувати</span>
+                </v-tooltip>
 
-            <v-tooltip top>
-                <template v-slot:activator="{ on }">
-                    <v-icon small @click="deleteItem(item)" v-on="on">delete</v-icon>
-                </template>
-                <span>Видалити</span>
-            </v-tooltip>
-        </template>
-        <template v-slot:no-data>
-            Дані відсутні
-        </template>
-    </v-data-table>
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-icon small @click="deleteItem(item)" v-on="on">delete</v-icon>
+                    </template>
+                    <span>Видалити</span>
+                </v-tooltip>
+            </template>
+            <template v-slot:no-data>
+                Дані відсутні
+            </template>
+        </v-data-table>
+    </div>
 </template>
 
 <script>
 export default {
     props: {
-        data: Array
+        data: Array,
+        loading: Boolean,
     },
     data: () => ({
-        loading: false,
+        url: window.location.pathname,
+        dialog: false,  
+        search: '',
+        modalData: {
+        //   id_code: '',
+          title: ''
+        },
         headers: [
         {
             text: '№',
@@ -62,12 +102,54 @@ export default {
         },
         ],
     }),
+//   watch:{
+//       loading:{
+          
+//       }
+//   },
+    // watch:{
+    //     loading1: {
+    //         // deep: true,
+    //         function(newVal, oldVal){
+    //             console.log('Prop changed: ', newVal, ' | was: ', oldVal);
+    //         }
+    //     }
+    // },
+   
     methods: {
-        edit() {
-
-        },
-        deleteItem() {
+ 
+        edit(item) {
+            this.dialog = true;
+            Object.assign(this.modalData, item)
             
+            //  console.log(this.modalData);
+        },
+        deleteItem (item) {
+            const index = this.data.indexOf(item)
+            this.$swal({
+                title: 'Бажаєте видалити?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Так',
+                cancelButtonText: "Закрити",
+            }).then((result) => {
+                if (result.value) {
+                this.data.splice(index, 1);
+                this.$swal.fire({
+                    icon: 'success',
+                    title: 'Видалено',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                }
+            })
+        },
+        
+        saveEdit() {
+            this.data[this.modalData.index].title = this.modalData.title; 
+            this.dialog = false;
         }
     }
 }
