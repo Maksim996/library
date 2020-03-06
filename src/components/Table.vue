@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-dialog v-model="dialog" persistent max-width="600px" >
             <v-card>
                 <v-card-text>
                     <v-container>
@@ -23,10 +23,11 @@
             v-model="search"
             clearable
             flat
-            solo-inverted
             hide-details
+            color="primary"
             prepend-inner-icon="search"
             label="Пошук"
+            class="mb-3 mx-3"
           ></v-text-field>
 
         <v-data-table
@@ -39,7 +40,7 @@
             class="elevation-1"
         >
         
-            <template v-slot:item.action="{ item }" v-if='url =="/"' >
+            <template v-slot:item.action="{ item }" v-if='$route.path =="/"' >
                 <v-tooltip top>
                     <template v-slot:activator="{ on }">
                         <v-icon small class="mx-2" @click="edit(item)" v-on="on">edit</v-icon>
@@ -68,7 +69,6 @@ export default {
         loading: Boolean,
     },
     data: () => ({
-        url: window.location.pathname,
         dialog: false,  
         search: '',
         modalData: {

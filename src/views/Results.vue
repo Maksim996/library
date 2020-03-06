@@ -19,47 +19,62 @@
     <v-tabs-items v-model="tab">
       <v-tab-item value="one_table">
         <v-card>
-          <Table :data="one_table"></Table>
-          <v-row >
-            <v-btn 
-              :disabled="one_table.length == 0 && loading" 
-              :loading="loading"
-              small 
-              @click="downloadFile(one_table)"
-              >
-              Завантажити
-            </v-btn>
+           <v-row>
+            <v-col class="col-12 d-flex justify-center pt-6">
+              <v-btn 
+                :disabled="loading || one_table.length == 0" 
+                :loading="loading"
+                color="success"
+                class="ma-2 white--text"
+                large
+                @click="downloadFile(one_table)"
+                >
+                Завантажити
+                <v-icon right dark>mdi-cloud-upload</v-icon>
+              </v-btn>
+            </v-col> 
           </v-row>
+          <Table :data="one_table"></Table>
         </v-card>
       </v-tab-item>
       <v-tab-item value="two_table">
         <v-card>
-          <Table :data="two_table"></Table>
-          <v-row >
-            <v-btn 
-              :disabled="two_table.length == 0" 
-              :loading="loading"
-              small 
-              @click="downloadFile(two_table) && loading"
-            >
-              Завантажити
-            </v-btn>
+          <v-row>
+            <v-col class="col-12 d-flex justify-center pt-6">
+              <v-btn 
+                :disabled=" loading || two_table.length == 0  " 
+                :loading="loading"
+                color="success"
+                class="ma-2 white--text"
+                large
+                @click="downloadFile(two_table) && loading"
+              >
+                Завантажити
+                <v-icon right dark>mdi-cloud-upload</v-icon>
+              </v-btn>
+            </v-col>
           </v-row>
+          <Table :data="two_table"></Table>
         </v-card>
       </v-tab-item>
        <v-tab-item value="three_table">
         <v-card>
-          <Table :data="three_table"></Table>
-          <v-row >
-            <v-btn 
-              :disabled="three_table.length == 0 && loading" 
+          <v-row>
+            <v-col class="col-12 d-flex justify-center pt-6">
+              <v-btn 
+              :disabled=" loading || three_table.length == 0" 
               :loading="loading"
-              small 
+              color="success"
+              class="ma-2 white--text"
+              large
               @click="downloadFile(three_table)"
-            >
-              Завантажити
-            </v-btn>
+              >
+                Завантажити
+                <v-icon right dark>mdi-cloud-upload</v-icon>
+              </v-btn>
+            </v-col>
           </v-row>
+          <Table :data="three_table"></Table>
         </v-card>
       </v-tab-item>
     </v-tabs-items>
@@ -109,6 +124,7 @@ import Table from '../components/Table.vue'
         }
       },
       downloadFile( data) {
+        this.loading = true;
           let initArr = [];
           initArr.push(["Шифр", "Назва", "Розділ", "Характеристики", "ББК", "УДК"]);
           data.map(item => {
@@ -124,6 +140,7 @@ import Table from '../components/Table.vue'
           wb.Sheets["Повні збіжності"] = ws;
           var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
           saveAs(new Blob([this.s2ab(wbout)],{type:"application/octet-stream"}), 'result.xlsx')
+          setTimeout(()=>{this.loading = false}, 1000)
       },
       s2ab(s) {
         var buf = new ArrayBuffer(s.length);

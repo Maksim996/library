@@ -24,14 +24,14 @@
     </v-row>
     <v-row>
       <v-col class="py-0">
-        <v-btn small @click="compare()">Порівняти</v-btn>
+        <v-btn  large color="success" @click="compare()">Порівняти</v-btn>
       </v-col>
     </v-row>
     <v-row>
     <v-col lg="12" md="12" sm="12" xs="12">
       <v-tabs 
-        fixed-tabs
-        background-color="indigo"
+        grow 
+        color="primary"
         v-model="tab"
       >
       <v-tab href="#one_table">
@@ -43,14 +43,14 @@
     </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item value="one_table">
-        <v-card>
-          <v-btn small @click="deleteDuplicate('one_table')">Видалення дублікатів</v-btn>
+        <v-card  >
+          <v-btn :disabled="one_table.length == 0" class="my-5 ml-3" large  dark color="purple"  @click="deleteDuplicate('one_table')">Видалення дублікатів</v-btn>
           <Table :data="one_table" :loading="loading"></Table>
         </v-card>
       </v-tab-item>
       <v-tab-item value="two_table">
         <v-card>
-          <v-btn small @click="deleteDuplicate('two_table')">Видалення дублікатів</v-btn>
+          <v-btn :disabled="two_table.length == 0" class="my-5 ml-3" large  dark color="purple"  @click="deleteDuplicate('two_table')">Видалення дублікатів</v-btn>
           <Table :data="two_table" :loading="loading"></Table>
         </v-card>
       </v-tab-item>
@@ -133,8 +133,8 @@ export default {
         this.two_table = await data.map((item, index) => {
           return {
             index,
-            id_code: item["Шифр спеціальності"],
-            title: item["Дисципліна"]
+            id_code: item["KOD_DISC"],
+            title: item["NAME_DISC"]
           }
         })
         this.loading = false;
@@ -151,6 +151,7 @@ export default {
     compare(){
           sessionStorage.setItem('one_table', JSON.stringify(this.one_table));
           sessionStorage.setItem('two_table', JSON.stringify(this.two_table));
+          this.$router.push("/results")
     },
 
 

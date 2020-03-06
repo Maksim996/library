@@ -15,11 +15,16 @@ const routes = [
     path: '/results',
     name: 'results',
     component: Results
+  },
+  {
+    path: '*',
+    redirect: '/'
   }
 ]
 
 const router = new VueRouter({
   mode: 'history',
+  linkExactActiveClass: 'is-active',
   base: process.env.BASE_URL,
   routes
 })

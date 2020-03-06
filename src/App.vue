@@ -3,8 +3,10 @@
     <v-card class="mb-4" color="grey lighten-4" flat tile>
       <v-toolbar>
         <v-toolbar-items>
-            <v-btn @click="redirect('/')" text>Головна</v-btn>
-            <v-btn @click="redirect('/results')" text>Результат</v-btn>
+           
+              <v-btn to="/" text color="primary">Головна</v-btn>
+              <v-btn to="/results" text color="primary" >Результат</v-btn>
+
         </v-toolbar-items>
       </v-toolbar>
     </v-card>
@@ -14,11 +16,9 @@
 <script>
 export default {
   name: 'Header',
-    data: () => ({}),
-    methods: {
-        redirect(url) {
-          if (this.$route.path !== url) this.$router.push(url);
-        },
+    data() {
+      return {
+      }
     }
 };
 </script>
