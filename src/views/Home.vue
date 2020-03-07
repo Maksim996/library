@@ -63,6 +63,7 @@
 <script>
 import XLSX from 'xlsx';
 import Table from '../components/Table.vue';
+import { mapMutations, mapGetters } from 'vuex';
 
 export default {
   name: "Home",
@@ -80,39 +81,44 @@ export default {
   created() {
     this.initialize();
   },
+  computed: {
+    ...mapGetters({
+      'getOneTable': "getOneTable",
+      'getTwoTable': "getTwoTable"
+    })
+  },
   methods: {
+    ...mapMutations({
+      "setOneTable": "setOneTable",
+      "setTwoTable": "setTwoTable"
+    }),
+    
     initialize () {
-      if(sessionStorage.getItem('one_table')) {
-        this.one_table = JSON.parse(sessionStorage.getItem('one_table'));
-      }
-      if(sessionStorage.getItem('two_table')) {
-        this.two_table = JSON.parse(sessionStorage.getItem('two_table'));
-      }
+      this.one_table = this.getOneTable;
+      this.two_table = this.getTwoTable;
     },
+    
     readFileAsync(file) {
-        return new Promise((resolve, reject) => {
-            
-            let reader = new FileReader();
-            reader.onload = (e) => {
-                var data = e.target.result;
-                var workbook = XLSX.read(data, {
-                    type: 'binary',
-                    codepage: 1251
-                });
-                workbook.SheetNames.forEach(function(sheetName) {
-                    resolve(XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]));
-                })
-            };
-            reader.onerror = reject;
-            reader.readAsBinaryString(file);
-           
-        })
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          var data = e.target.result;
+          var workbook = XLSX.read(data, {
+            type: 'binary',
+            codepage: 1251
+          });
+          workbook.SheetNames.forEach(function(sheetName) {
+            resolve(XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]));
+          })
+        };
+        reader.onerror = reject;
+        reader.readAsBinaryString(file);
+      })
     },
 
     async readFileLibrary(event) {
       if(event[0]) {
         this.loading = true;
-        // console.log(this.loading);
         let data = await this.readFileAsync(event[0]);
         this.one_table = await data.map((item, index) => {
           return {
@@ -120,14 +126,13 @@ export default {
             id_code: item["Шифр"],
             title: item["Назва"]
           }
-        })
-                
+        });
         this.loading = false;
       }
     },
 
     async readFileASU(event) {
-       this.loading = true;
+      this.loading = true;
       if(event[0]) {
         let data = await this.readFileAsync(event[0]);
         this.two_table = await data.map((item, index) => {
@@ -140,6 +145,7 @@ export default {
         this.loading = false;
       }
     },
+
     deleteDuplicate(array) {
       this[array] = this[array].sort(function(a,b){return a.title < b.title ? -1 : 1;}).reduce(function(arr, el) {
         if(!arr.length || arr[arr.length - 1].title != el.title) {
@@ -148,17 +154,12 @@ export default {
         return arr;
       }, []);
     },
-    compare(){
-          sessionStorage.setItem('one_table', JSON.stringify(this.one_table));
-          sessionStorage.setItem('two_table', JSON.stringify(this.two_table));
-          this.$router.push("/results")
-    },
-
-
-  },
-  computed: {
     
+    compare(){
+        this.setOneTable(this.one_table);
+        this.setTwoTable(this.two_table);
+        this.$router.push("/results");
+    }
   }
-  
 };
 </script>

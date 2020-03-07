@@ -40,7 +40,7 @@
             class="elevation-1"
         >
         
-            <template v-slot:item.action="{ item }" v-if='$route.path =="/"' >
+            <template v-slot:item.action="{ item }" v-if='$route.path =="/"'>
                 <v-tooltip top>
                     <template v-slot:activator="{ on }">
                         <v-icon small class="mx-2" @click="edit(item)" v-on="on">edit</v-icon>
@@ -71,6 +71,7 @@ export default {
     data: () => ({
         dialog: false,  
         search: '',
+        editIndex: null,
         modalData: {
         //   id_code: '',
           title: ''
@@ -102,27 +103,11 @@ export default {
         },
         ],
     }),
-//   watch:{
-//       loading:{
-          
-//       }
-//   },
-    // watch:{
-    //     loading1: {
-    //         // deep: true,
-    //         function(newVal, oldVal){
-    //             console.log('Prop changed: ', newVal, ' | was: ', oldVal);
-    //         }
-    //     }
-    // },
-   
     methods: {
- 
         edit(item) {
+            Object.assign(this.modalData, item);
+            this.editIndex = this.data.indexOf(item);
             this.dialog = true;
-            Object.assign(this.modalData, item)
-            
-            //  console.log(this.modalData);
         },
         deleteItem (item) {
             const index = this.data.indexOf(item)
@@ -146,9 +131,9 @@ export default {
                 }
             })
         },
-        
+
         saveEdit() {
-            this.data[this.modalData.index].title = this.modalData.title; 
+            this.data[this.editIndex].title = this.modalData.title; 
             this.dialog = false;
         }
     }

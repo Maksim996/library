@@ -1,24 +1,20 @@
 # library
 
-## Project setup
-```
-npm install
-```
+### Installation
+* Run `npm install`
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Web version:
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### Running the app
+* Run `npm run serve`
 
-### Lints and fixes files
-```
-npm run lint
-```
+### Build the app
+* Run `npm run prod`
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Desctop version:
+
+### Running the app
+* Run `npm run electron:serve`
+
+### Build the app
+* Run `npm run electron:build`

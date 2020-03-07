@@ -4,29 +4,26 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  namespaced: true,
   state: { 
     one_table: [],
     two_table: [],
-    arr: { year: 20, great: 10 } 
   },
   mutations: {
-    one_table: (state, array) => {
-      state.one_table = array;
+    setOneTable(state, table) {
+      state.one_table = table;
     },
-    two_table: (state, array) => {
-      state.two_table = array;
+    setTwoTable(state, table) {
+      state.two_table = table;
     },
   },
   actions: {},
   modules: {},
   getters: {
-    arr: state => {
-      return state.arr;
-    },
-    one_table: state => {
+    getOneTable: state => {
       return state.one_table;
     },
-    two_table: state => {
+    getTwoTable: state => {
       return state.two_table;
     },
   }
