@@ -73,8 +73,6 @@ export default {
         dialog: false,  
         search: '',
         modalData: {
-        //   id_code: '',
-          title: ''
         },
         headers: [
         {
@@ -103,27 +101,11 @@ export default {
         },
         ],
     }),
-//   watch:{
-//       loading:{
-          
-//       }
-//   },
-    // watch:{
-    //     loading1: {
-    //         // deep: true,
-    //         function(newVal, oldVal){
-    //             console.log('Prop changed: ', newVal, ' | was: ', oldVal);
-    //         }
-    //     }
-    // },
-   
     methods: {
  
         edit(item) {
             this.dialog = true;
-            Object.assign(this.modalData, item)
-            
-            //  console.log(this.modalData);
+            this.modalData = item;
         },
         deleteItem (item) {
             const index = this.data.indexOf(item)
