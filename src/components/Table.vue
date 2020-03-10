@@ -6,7 +6,6 @@
                     <v-container>
                         <v-row>
                             <v-col cols="12">
-                                <!-- <v-text-field label="Шифр" v-model="modalData.id_code"></v-text-field> -->
                                 <v-text-field label="Назва" v-model="modalData.title"></v-text-field>
                             </v-col>
                         </v-row>
@@ -73,7 +72,6 @@ export default {
         search: '',
         editIndex: null,
         modalData: {
-        //   id_code: '',
           title: ''
         },
         headers: [
@@ -81,13 +79,11 @@ export default {
             text: '№',
             value: 'index',
             width: "10px",
-            sortable: false,
         },
         {
             text: 'ID',
             value: 'id_code',
             width: "10px",
-            sortable: false,
         },
         {
             text: 'Назва',

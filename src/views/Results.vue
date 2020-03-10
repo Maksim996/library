@@ -24,7 +24,7 @@
                 color="success"
                 class="ma-2 white--text"
                 large
-                @click="downloadFile(similar)"
+                @click="downloadFile(similar, 'Збіжності')"
                 >
                   Завантажити
                 <v-icon right dark>mdi-cloud-upload</v-icon>
@@ -44,7 +44,7 @@
                 color="success"
                 class="ma-2 white--text"
                 large
-                @click="downloadFile(unique_library) && loading"
+                @click="downloadFile(unique_library, 'Унікальні_предмети_Бібліотеки') && loading"
               >
                 Завантажити
                 <v-icon right dark>mdi-cloud-upload</v-icon>
@@ -64,7 +64,7 @@
               color="success"
               class="ma-2 white--text"
               large
-              @click="downloadFile(unique_ssu)"
+              @click="downloadFile(unique_ssu, 'Унікальні_предмети_АСУ')"
               >
                 Завантажити
                 <v-icon right dark>mdi-cloud-upload</v-icon>
@@ -111,9 +111,9 @@
         var dataOneTable = this.getOneTable().slice();
         var dataTwoTable = this.getTwoTable().slice();
         if(dataOneTable && dataTwoTable) {
-          for ( let i = 0; i < dataOneTable.length; i++){
-            for (let j = 0; j < dataTwoTable.length; j++ ){
-              if(dataOneTable[i].title === dataTwoTable[j].title ){
+          for (let i = 0; i < dataOneTable.length; i++){
+            for (let j = 0; j < dataTwoTable.length; j++){
+              if(dataOneTable[i].title == dataTwoTable[j].title){
                 this.similar.push(dataTwoTable[j]);
                 dataOneTable.splice(i,1);
                 dataTwoTable.splice(j,1);
@@ -125,24 +125,24 @@
           this.unique_ssu = dataTwoTable;
         }
       },
-      downloadFile(data) {
+      downloadFile(data, titleFile) {
         this.loading = true;
-          let initArr = [];
-          initArr.push(["Шифр", "Назва", "Розділ", "Характеристики", "ББК", "УДК"]);
-          data.map(item => {
-            var resItem = [];
-            resItem.push(item.id_code == "" ? "" : item.id_code, item.title)
-            return resItem;
-          }).map(item => initArr.push(item));
+        let initArr = [];
+        initArr.push(["Шифр", "Назва", "Розділ", "Характеристики", "ББК", "УДК"]);
+        data.map(item => {
+          var resItem = [];
+          resItem.push(item.id_code == "" ? "" : item.id_code, item.title)
+          return resItem;
+        }).map(item => initArr.push(item));
 
-          var wb = XLSX.utils.book_new();
-          wb.SheetNames.push("Повні збіжності");
-          var ws_data = initArr.map(e => e);
-          var ws = XLSX.utils.aoa_to_sheet(ws_data);
-          wb.Sheets["Повні збіжності"] = ws;
-          var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
-          saveAs(new Blob([this.s2ab(wbout)],{type:"application/octet-stream"}), 'result.xlsx')
-          setTimeout(()=>{this.loading = false}, 1000)
+        var wb = XLSX.utils.book_new();
+        wb.SheetNames.push("Повні збіжності");
+        var ws_data = initArr.map(e => e);
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        wb.Sheets["Повні збіжності"] = ws;
+        var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+        saveAs(new Blob([this.s2ab(wbout)],{type:"application/octet-stream"}), titleFile+'.xlsx');
+        setTimeout(()=>{this.loading = false}, 1000);
       },
       s2ab(s) {
         var buf = new ArrayBuffer(s.length);
