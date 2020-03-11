@@ -124,7 +124,8 @@ export default {
           return {
             index,
             id_code: item["Шифр"],
-            title: item["Назва"]
+            title: item["Назва"],
+            titleSort: item["Назва"].toUpperCase().replace(/ +/g, ' ').trim()
           }
         });
         this.loading = false;
@@ -139,7 +140,8 @@ export default {
           return {
             index,
             id_code: item["KOD_DISC"],
-            title: item["NAME_DISC"]
+            title: item["NAME_DISC"],
+            titleSort: item["NAME_DISC"].toUpperCase().replace(/ +/g, ' ').trim()
           }
         })
         this.loading = false;
@@ -147,8 +149,8 @@ export default {
     },
 
     deleteDuplicate(array) {
-      this[array] = this[array].sort(function(a,b){return a.title < b.title ? -1 : 1;}).reduce(function(arr, el) {
-        if(!arr.length || arr[arr.length - 1].title != el.title) {
+      this[array] = this[array].sort(function(a,b){return a.titleSort < b.titleSort ? -1 : 1;}).reduce(function(arr, el) {
+        if(!arr.length || arr[arr.length - 1].titleSort != el.titleSort) {
             arr.push(el);
         }
         return arr;
@@ -156,9 +158,9 @@ export default {
     },
     
     compare(){
-        this.setOneTable(this.one_table);
-        this.setTwoTable(this.two_table);
-        this.$router.push("/results");
+      this.setOneTable(this.one_table);
+      this.setTwoTable(this.two_table);
+      this.$router.push("/results");
     }
   }
 };

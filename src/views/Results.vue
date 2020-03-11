@@ -111,18 +111,19 @@
         var dataOneTable = this.getOneTable().slice();
         var dataTwoTable = this.getTwoTable().slice();
         if(dataOneTable && dataTwoTable) {
-          for (let i = 0; i < dataOneTable.length; i++){
-            for (let j = 0; j < dataTwoTable.length; j++){
-              if(dataOneTable[i].title == dataTwoTable[j].title){
+          for (let i = 0; i < dataOneTable.length; i++) {
+            for (let j = 0; j < dataTwoTable.length; j++) {
+              if(dataOneTable[i].titleSort == dataTwoTable[j].titleSort) {
                 this.similar.push(dataTwoTable[j]);
                 dataOneTable.splice(i,1);
                 dataTwoTable.splice(j,1);
-                break;
               }
             }
           };
           this.unique_library = dataOneTable;
           this.unique_ssu = dataTwoTable;
+          console.log(this.unique_library)
+          console.log(this.unique_ssu)
         }
       },
       downloadFile(data, titleFile) {

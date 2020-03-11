@@ -35,7 +35,6 @@
             :loading-text="loading ? 'Завантаження' : ''"
             :items="data"
             :search="search"
-            :footer-props="{'items-per-page-text': 'Рядків на сторінку:', 'items-per-page-all-text': 'Всі'}"
             class="elevation-1"
         >
         
@@ -129,7 +128,8 @@ export default {
         },
 
         saveEdit() {
-            this.data[this.editIndex].title = this.modalData.title; 
+            this.data[this.editIndex].title = this.modalData.title;
+            this.data[this.editIndex].titleSort = this.modalData.title.toUpperCase().replace(/ +/g, ' ').trim(); 
             this.dialog = false;
         }
     }
