@@ -26,8 +26,8 @@
                 large
                 @click="downloadFile(similar, 'Збіжності')"
                 >
-                  Завантажити
-                <v-icon right dark>mdi-cloud-upload</v-icon>
+                  Зберегти
+                <v-icon right dark>mdi-cloud-download</v-icon>
               </v-btn>
             </v-col> 
           </v-row>
@@ -46,8 +46,8 @@
                 large
                 @click="downloadFile(unique_library, 'Унікальні_предмети_Бібліотеки') && loading"
               >
-                Завантажити
-                <v-icon right dark>mdi-cloud-upload</v-icon>
+                Зберегти
+                <v-icon right dark>mdi-cloud-download</v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -66,8 +66,8 @@
               large
               @click="downloadFile(unique_ssu, 'Унікальні_предмети_АСУ')"
               >
-                Завантажити
-                <v-icon right dark>mdi-cloud-upload</v-icon>
+                Зберегти
+                <v-icon right dark>mdi-cloud-download</v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -77,6 +77,9 @@
     </v-tabs-items>
     </v-col>
     </v-row>
+    <v-card-text class="py-2 text-center">
+      СтудЦІТ
+    </v-card-text>
   </v-container>
 </template>
 

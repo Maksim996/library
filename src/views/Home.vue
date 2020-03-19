@@ -61,6 +61,9 @@
     </v-tabs-items>
     </v-col>
     </v-row>
+    <v-card-text class="py-2 text-center">
+      СтудЦІТ
+    </v-card-text>
   </v-container>
 </template>
 
@@ -120,6 +123,14 @@ export default {
 
     async readFileLibrary(event) {
       if(event[0]) {
+        if(event[0].name.match(/xls/) == null) {
+          this.$swal({
+            icon: 'error',
+            title: 'Помилка',
+            text: 'Невірний формат файлу. Підтримуються формати: .xls, xslx'
+          })
+          return;
+        }
         this.loading = true;
         let data = await this.readFileAsync(event[0]);
         this.one_table = await data.map((item, index) => {
@@ -128,7 +139,7 @@ export default {
             id_code: item["Шифр"],
             title: item["Назва"],
             department: "",
-            titleSort: item["Назва"].toUpperCase().replace(/ +/g, ' ').trim()
+            titleSort: item["Назва"].toLowerCase().replace(/ +/g, ' ').trim()
           }
         });
         this.loading = false;
@@ -136,8 +147,16 @@ export default {
     },
 
     async readFileASU(event) {
-      this.loading = true;
       if(event[0]) {
+        if(event[0].name.match(/csv/) == null) {
+          this.$swal({
+            icon: 'error',
+            title: 'Помилка',
+            text: 'Невірний формат файлу. Підтримуються формати: .xls, xslx'
+          })
+          return;
+        }
+        this.loading = true;
         let data = await this.readFileAsync(event[0]);
         this.two_table = await data.map((item, index) => {
           return {
@@ -145,7 +164,7 @@ export default {
             id_code: item["KOD_DISC"],
             title: item["NAME_DISC"],
             department: item["NAME_DIV"],
-            titleSort: item["NAME_DISC"].toUpperCase().replace(/ +/g, ' ').trim()
+            titleSort: item["NAME_DISC"].toLowerCase().replace(/ +/g, ' ').trim()
           }
         })
         this.loading = false;

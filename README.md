@@ -16,5 +16,8 @@
 ### Running the app
 * Run `npm run electron:serve`
 
-### Build the app
+### Build the app x64
 * Run `npm run electron:build`
+
+### Build the app x32
+* Run `npm run electron:build -- --ia32`
