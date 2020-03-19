@@ -90,6 +90,11 @@ export default {
             value: 'title',
         },
         {
+            text: 'Кафедра',
+            align: 'left',
+            value: 'department',
+        },
+        {
             text: '',
             value: 'action',
             sortable: false,

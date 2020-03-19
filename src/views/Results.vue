@@ -122,8 +122,6 @@
           };
           this.unique_library = dataOneTable;
           this.unique_ssu = dataTwoTable;
-          console.log(this.unique_library)
-          console.log(this.unique_ssu)
         }
       },
       downloadFile(data, titleFile) {
@@ -132,15 +130,15 @@
         initArr.push(["Шифр", "Назва", "Розділ", "Характеристики", "ББК", "УДК"]);
         data.map(item => {
           var resItem = [];
-          resItem.push(item.id_code == "" ? "" : item.id_code, item.title)
+          resItem.push(item.id_code == "" ? "" : item.id_code, item.title, item.department)
           return resItem;
         }).map(item => initArr.push(item));
 
         var wb = XLSX.utils.book_new();
-        wb.SheetNames.push("Повні збіжності");
+        wb.SheetNames.push(titleFile);
         var ws_data = initArr.map(e => e);
         var ws = XLSX.utils.aoa_to_sheet(ws_data);
-        wb.Sheets["Повні збіжності"] = ws;
+        wb.Sheets[titleFile] = ws;
         var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
         saveAs(new Blob([this.s2ab(wbout)],{type:"application/octet-stream"}), titleFile+'.xlsx');
         setTimeout(()=>{this.loading = false}, 1000);
