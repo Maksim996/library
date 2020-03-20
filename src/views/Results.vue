@@ -17,17 +17,17 @@
       <v-tab-item value="similar">
         <v-card>
            <v-row>
-            <v-col class="col-12 d-flex justify-center pt-6">
+            <v-col class="col-12 d-flex justify-center">
               <v-btn 
                 :disabled="loading || similar.length == 0" 
                 :loading="loading"
                 color="success"
-                class="ma-2 white--text"
+                class="white--text"
                 large
                 @click="downloadFile(similar, 'Збіжності')"
                 >
                   Зберегти
-                <v-icon right dark>mdi-cloud-download</v-icon>
+                <v-icon right dark>save</v-icon>
               </v-btn>
             </v-col> 
           </v-row>
@@ -37,17 +37,17 @@
       <v-tab-item value="unique_library">
         <v-card>
           <v-row>
-            <v-col class="col-12 d-flex justify-center pt-6">
+            <v-col class="col-12 d-flex justify-center">
               <v-btn 
                 :disabled=" loading || unique_library.length == 0" 
                 :loading="loading"
                 color="success"
-                class="ma-2 white--text"
+                class="white--text"
                 large
                 @click="downloadFile(unique_library, 'Унікальні_предмети_Бібліотеки') && loading"
               >
                 Зберегти
-                <v-icon right dark>mdi-cloud-download</v-icon>
+                <v-icon right dark>save</v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -57,17 +57,17 @@
        <v-tab-item value="unique_ssu">
         <v-card>
           <v-row>
-            <v-col class="col-12 d-flex justify-center pt-6">
+            <v-col class="col-12 d-flex justify-center">
               <v-btn 
               :disabled=" loading || unique_ssu.length == 0" 
               :loading="loading"
               color="success"
-              class="ma-2 white--text"
+              class="white--text"
               large
               @click="downloadFile(unique_ssu, 'Унікальні_предмети_АСУ')"
               >
                 Зберегти
-                <v-icon right dark>mdi-cloud-download</v-icon>
+                <v-icon right dark>save</v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -106,23 +106,34 @@
       this.compareSort();
     },
     methods: {
-      ...mapGetters({
-        'getOneTable': "getOneTable",
-        'getTwoTable': "getTwoTable"
-      }),
-      compareSort (){
+      ...mapGetters(["getOneTable", "getTwoTable"]),
+
+      compareSort() {
         var dataOneTable = this.getOneTable().slice();
         var dataTwoTable = this.getTwoTable().slice();
+        
         if(dataOneTable && dataTwoTable) {
           for (let i = 0; i < dataOneTable.length; i++) {
             for (let j = 0; j < dataTwoTable.length; j++) {
               if(dataOneTable[i].titleSort == dataTwoTable[j].titleSort) {
                 this.similar.push(dataTwoTable[j]);
-                dataOneTable.splice(i,1);
-                dataTwoTable.splice(j,1);
               }
             }
-          };
+          }
+
+          for (let i = 0; i < this.similar.length; i++) {
+            for (let j = 0; j < dataOneTable.length; j++) {
+              if(this.similar[i].titleSort == dataOneTable[j].titleSort) {
+                dataOneTable.splice(j, 1);
+              }
+            }
+            for (let k = 0; k < dataTwoTable.length; k++) {
+              if(this.similar[i].titleSort == dataTwoTable[k].titleSort) {
+                dataTwoTable.splice(k, 1);
+              }
+            }
+          }
+
           this.unique_library = dataOneTable;
           this.unique_ssu = dataTwoTable;
         }

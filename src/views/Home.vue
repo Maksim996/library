@@ -152,7 +152,7 @@ export default {
           this.$swal({
             icon: 'error',
             title: 'Помилка',
-            text: 'Невірний формат файлу. Підтримуються формати: .xls, xslx'
+            text: 'Невірний формат файлу. Підтримуються формати: .csv'
           })
           return;
         }
