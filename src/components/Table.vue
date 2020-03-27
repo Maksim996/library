@@ -79,20 +79,22 @@ export default {
             value: 'index',
             width: "10px",
         },
-        {
-            text: 'ID',
-            value: 'id_code',
-            width: "10px",
-        },
+        // {
+        //     text: 'ID',
+        //     value: 'id_code',
+        //     width: "10px",
+        // },
         {
             text: 'Назва',
             align: 'left',
             value: 'title',
+            width: "50%",
         },
         {
             text: 'Кафедра',
             align: 'left',
             value: 'department',
+            width: "40%",
         },
         {
             text: '',

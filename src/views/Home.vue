@@ -44,18 +44,18 @@
     <v-tabs-items v-model="tab">
       <v-tab-item value="one_table">
         <v-card  >
-          <v-btn v-if="one_table.length > 0" class="my-5 ml-3" large  dark color="purple"  @click="deleteDuplicate('one_table')">Видалення дублікатів</v-btn>
+          <!-- <v-btn v-if="one_table.length > 0" class="my-5 ml-3" large  dark color="purple"  @click="deleteDuplicate('one_table')">Видалення дублікатів</v-btn> -->
           <Table :data="one_table" :loading="loading"></Table>
-          <h2 v-if="duplicate_one_table.length > 0" class="title ma-4">Дубликати дисциплін</h2>
-          <Table v-if="duplicate_one_table.length > 0" :data="duplicate_one_table"></Table>
+          <!-- <h2 v-if="duplicate_one_table.length > 0" class="title ma-4">Дубликати дисциплін</h2>
+          <Table v-if="duplicate_one_table.length > 0" :data="duplicate_one_table"></Table> -->
         </v-card>
       </v-tab-item>
       <v-tab-item value="two_table">
         <v-card>
-          <v-btn v-if="two_table.length > 0" class="my-5 ml-3" large  dark color="purple"  @click="deleteDuplicate('two_table')">Видалення дублікатів</v-btn>
+          <!-- <v-btn v-if="two_table.length > 0" class="my-5 ml-3" large  dark color="purple"  @click="deleteDuplicate('two_table')">Видалення дублікатів</v-btn> -->
           <Table :data="two_table" :loading="loading"></Table>
-          <h2 v-if="duplicate_two_table.length > 0" class="title ma-4">Дубликати дисциплін</h2>
-          <Table v-if="duplicate_two_table.length > 0" :data="duplicate_two_table"></Table>
+          <!-- <h2 v-if="duplicate_two_table.length > 0" class="title ma-4">Дубликати дисциплін</h2>
+          <Table v-if="duplicate_two_table.length > 0" :data="duplicate_two_table"></Table> -->
         </v-card>
       </v-tab-item>
     </v-tabs-items>
@@ -79,8 +79,8 @@ export default {
       tab: null,
       one_table: [],
       two_table: [],
-      duplicate_one_table: [],
-      duplicate_two_table: [],
+      // duplicate_one_table: [],
+      // duplicate_two_table: [],
       loading: false
     }
   },
@@ -99,8 +99,8 @@ export default {
     initialize () {
       this.one_table = this.getOneTable;
       this.two_table = this.getTwoTable;
-      this.duplicate_one_table = this.getDuplicateOneTable;
-      this.duplicate_two_table = this.getDuplicateTwoTable;
+      // this.duplicate_one_table = this.getDuplicateOneTable;
+      // this.duplicate_two_table = this.getDuplicateTwoTable;
     },
     
     readFileAsync(file) {
@@ -135,10 +135,10 @@ export default {
         let data = await this.readFileAsync(event[0]);
         this.one_table = await data.map((item, index) => {
           return {
-            index,
+            index: index+1,
             id_code: item["Шифр"],
             title: item["Назва"],
-            department: "",
+            department: item["Кафедра"] ? "Кафедра "+item["Кафедра"].toLowerCase() : "",
             titleSort: item["Назва"].toLowerCase().replace(/ +/g, ' ').trim()
           }
         });
@@ -160,7 +160,7 @@ export default {
         let data = await this.readFileAsync(event[0]);
         this.two_table = await data.map((item, index) => {
           return {
-            index,
+            index: index+1,
             id_code: item["KOD_DISC"],
             title: item["NAME_DISC"],
             department: item["NAME_DIV"],
@@ -171,24 +171,24 @@ export default {
       }
     },
 
-    deleteDuplicate(array) {
-      this[array] = this[array].sort((a, b) => {
-        return a.titleSort < b.titleSort ? -1 : 1;
-      }).reduce((arr, el) => {
-        if(!arr.length || arr[arr.length - 1].titleSort != el.titleSort) {
-          arr.push(el);
-        } else {
-          this["duplicate_"+array].push(el)
-        }
-        return arr;
-      }, []);
-    },
+    // deleteDuplicate(array) {
+    //   this[array] = this[array].sort((a, b) => {
+    //     return a.titleSort < b.titleSort ? -1 : 1;
+    //   }).reduce((arr, el) => {
+    //     if(!arr.length || arr[arr.length - 1].titleSort != el.titleSort) {
+    //       arr.push(el);
+    //     } else {
+    //       this["duplicate_"+array].push(el)
+    //     }
+    //     return arr;
+    //   }, []);
+    // },
     
     compare() {
       this.setOneTable(this.one_table);
       this.setTwoTable(this.two_table);
-      this.setDuplicateOneTable(this.duplicate_one_table);
-      this.setDuplicateTwoTable(this.duplicate_two_table);
+      // this.setDuplicateOneTable(this.duplicate_one_table);
+      // this.setDuplicateTwoTable(this.duplicate_two_table);
       this.$router.push("/results");
     }
   }

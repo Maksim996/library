@@ -108,34 +108,59 @@
     methods: {
       ...mapGetters(["getOneTable", "getTwoTable"]),
 
+      deleteDuplicated(table) {
+        var result = [];
+        for(let i = 0; i < table.length; i++) {
+          if(!result.find(x => x.titleSort == table[i].titleSort)) {
+            result.push({
+              index: i+1,
+              title: table[i].title,
+              titleSort: table[i].titleSort,
+              department: [table[i].department]
+            })
+          } else {
+            result[result.indexOf(result.find(x => x.titleSort == table[i].titleSort))].department.push(table[i].department)
+          }
+        }
+        return result;
+      },
+
       compareSort() {
         var dataOneTable = this.getOneTable().slice();
         var dataTwoTable = this.getTwoTable().slice();
-        
+
         if(dataOneTable && dataTwoTable) {
-          for (let i = 0; i < dataOneTable.length; i++) {
-            for (let j = 0; j < dataTwoTable.length; j++) {
-              if(dataOneTable[i].titleSort == dataTwoTable[j].titleSort) {
-                this.similar.push(dataTwoTable[j]);
+          var test1 = this.deleteDuplicated(dataOneTable)
+          var test2 = this.deleteDuplicated(dataTwoTable)
+
+          for (let i = 0; i < test1.length; i++) {
+            for (let j = 0; j < test2.length; j++) {
+              if(test1[i].title == test2[j].title) {
+                this.similar.push({
+                  index: test2[j].index,
+                  title: test2[j].title,
+                  titleSort: test2[j].titleSort,
+                  department: [...new Set(test1[i].department.concat(test2[j].department))]
+                });
               }
             }
           }
 
           for (let i = 0; i < this.similar.length; i++) {
-            for (let j = 0; j < dataOneTable.length; j++) {
-              if(this.similar[i].titleSort == dataOneTable[j].titleSort) {
-                dataOneTable.splice(j, 1);
+            for (let j = 0; j < test1.length; j++) {
+              if(this.similar[i].titleSort == test1[j].titleSort) {
+                test1.splice(j, 1);
               }
             }
-            for (let k = 0; k < dataTwoTable.length; k++) {
-              if(this.similar[i].titleSort == dataTwoTable[k].titleSort) {
-                dataTwoTable.splice(k, 1);
+            for (let k = 0; k < test2.length; k++) {
+              if(this.similar[i].titleSort == test2[k].titleSort) {
+                test2.splice(k, 1);
               }
             }
           }
 
-          this.unique_library = dataOneTable;
-          this.unique_ssu = dataTwoTable;
+          this.unique_library = test1;
+          this.unique_ssu = test2;
         }
       },
       downloadFile(data, titleFile) {
@@ -144,7 +169,7 @@
         initArr.push(["Шифр", "Назва", "Розділ", "Характеристики", "ББК", "УДК"]);
         data.map(item => {
           var resItem = [];
-          resItem.push(item.id_code == "" ? "" : item.id_code, item.title, item.department)
+          resItem.push("", item.title, [...new Set(item.department)].join(", "))
           return resItem;
         }).map(item => initArr.push(item));
 
