@@ -37,22 +37,42 @@
             :search="search"
             class="elevation-1"
         >
-        
-            <template v-slot:item.action="{ item }" v-if='$route.path =="/"'>
-                <v-tooltip top>
-                    <template v-slot:activator="{ on }">
-                        <v-icon small class="mx-2" @click="edit(item)" v-on="on">edit</v-icon>
-                    </template>
-                    <span>Редагувати</span>
-                </v-tooltip>
+            <template v-slot:body="{ items }">
+                <tbody>
+                <tr v-for="(item, index) in items" :key="item.name">
+                    <td>{{ item.index }}</td>
+                    <td>{{ item.title }}</td>
+                    <td  v-if="Array.isArray(item.department)">
+                        <ul>
+                            <li v-for="department in item.department" v-if="department!==''">
+                                {{ department !=='' ? department : '' }}
+                            </li>
+                        </ul>
+                    </td>
+                    <td v-else>
+                        {{ item.department }}
+                    </td>
+                    <td>
+                        <div v-if='$route.path =="/"'>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon small class="mx-2" @click="edit(item)" v-on="on">edit</v-icon>
+                                </template>
+                                <span>Редагувати</span>
+                            </v-tooltip>
 
-                <v-tooltip top>
-                    <template v-slot:activator="{ on }">
-                        <v-icon small @click="deleteItem(item)" v-on="on">delete</v-icon>
-                    </template>
-                    <span>Видалити</span>
-                </v-tooltip>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon small @click="deleteItem(item)" v-on="on">delete</v-icon>
+                                </template>
+                                <span>Видалити</span>
+                            </v-tooltip>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
             </template>
+
             <template v-slot:no-data>
                 Дані відсутні
             </template>
@@ -105,7 +125,9 @@ export default {
         },
         ],
     }),
+
     methods: {
+
         edit(item) {
             Object.assign(this.modalData, item);
             this.editIndex = this.data.indexOf(item);
@@ -136,7 +158,7 @@ export default {
 
         saveEdit() {
             this.data[this.editIndex].title = this.modalData.title;
-            this.data[this.editIndex].titleSort = this.modalData.title.toUpperCase().replace(/ +/g, ' ').trim(); 
+            this.data[this.editIndex].titleSort = this.modalData.title.toUpperCase().replace(/ +/g, ' ').trim();
             this.dialog = false;
         }
     }

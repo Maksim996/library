@@ -7,7 +7,7 @@
         Збіжності
       </v-tab>
       <v-tab href="#unique_library">
-        Унікальні предмети Бібліотеки 
+        Унікальні предмети Бібліотеки
       </v-tab>
       <v-tab href="#unique_ssu">
         Унікальні предмети АСУ
@@ -18,8 +18,8 @@
         <v-card>
            <v-row>
             <v-col class="col-12 d-flex justify-center">
-              <v-btn 
-                :disabled="loading || similar.length == 0" 
+              <v-btn
+                :disabled="loading || similar.length == 0"
                 :loading="loading"
                 color="success"
                 class="white--text"
@@ -29,7 +29,7 @@
                   Зберегти
                 <v-icon right dark>save</v-icon>
               </v-btn>
-            </v-col> 
+            </v-col>
           </v-row>
           <Table :data="similar"></Table>
         </v-card>
@@ -38,8 +38,8 @@
         <v-card>
           <v-row>
             <v-col class="col-12 d-flex justify-center">
-              <v-btn 
-                :disabled=" loading || unique_library.length == 0" 
+              <v-btn
+                :disabled=" loading || unique_library.length == 0"
                 :loading="loading"
                 color="success"
                 class="white--text"
@@ -58,8 +58,8 @@
         <v-card>
           <v-row>
             <v-col class="col-12 d-flex justify-center">
-              <v-btn 
-              :disabled=" loading || unique_ssu.length == 0" 
+              <v-btn
+              :disabled=" loading || unique_ssu.length == 0"
               :loading="loading"
               color="success"
               class="white--text"
@@ -158,7 +158,7 @@
               }
             }
           }
-
+          console.log(test1);
           this.unique_library = test1;
           this.unique_ssu = test2;
         }
