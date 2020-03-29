@@ -158,7 +158,6 @@
               }
             }
           }
-          console.log(test1);
           this.unique_library = test1;
           this.unique_ssu = test2;
         }
