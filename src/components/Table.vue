@@ -39,12 +39,13 @@
         >
             <template v-slot:body="{ items }">
                 <tbody>
-                <tr v-for="(item, index) in items" :key="item.name">
+                <tr v-for="item in items" :key="item.name">
                     <td>{{ item.index }}</td>
+                    <td>{{ item.id_code }}</td>
                     <td>{{ item.title }}</td>
                     <td  v-if="Array.isArray(item.department)">
                         <ul>
-                            <li v-for="department in item.department" v-if="department!==''">
+                            <li v-for="(department, index) in item.department" v-if="department !== ''" :key="index">
                                 {{ department !=='' ? department : '' }}
                             </li>
                         </ul>
@@ -99,11 +100,11 @@ export default {
             value: 'index',
             width: "10px",
         },
-        // {
-        //     text: 'ID',
-        //     value: 'id_code',
-        //     width: "10px",
-        // },
+        {
+            text: 'ID',
+            value: 'id_code',
+            width: "10px",
+        },
         {
             text: 'Назва',
             align: 'left',

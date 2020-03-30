@@ -114,6 +114,7 @@
           if(!result.find(x => x.titleSort == table[i].titleSort)) {
             result.push({
               index: i+1,
+              id_code: table[i].id_code,
               title: table[i].title,
               titleSort: table[i].titleSort,
               department: [table[i].department]
@@ -138,6 +139,7 @@
               if(test1[i].title == test2[j].title) {
                 this.similar.push({
                   index: test2[j].index,
+                  id_code: test2[j].id_code,
                   title: test2[j].title,
                   titleSort: test2[j].titleSort,
                   department: [...new Set(test1[i].department.concat(test2[j].department))]
@@ -168,7 +170,7 @@
         initArr.push(["Шифр", "Назва", "Розділ", "Характеристики", "ББК", "УДК"]);
         data.map(item => {
           var resItem = [];
-          resItem.push("", item.title, [...new Set(item.department)].join(", "))
+          resItem.push(item.id_code ? item.id_code : "", item.title, [...new Set(item.department)].join(", "))
           return resItem;
         }).map(item => initArr.push(item));
 
