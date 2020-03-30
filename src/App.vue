@@ -19,11 +19,6 @@ export default {
     data() {
       return {
       }
-    },
-    methods: {
-        redirect(url) {
-          if (this.$route.path !== url) this.$router.push(url);
-        },
     }
 };
 </script>

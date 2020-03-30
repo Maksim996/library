@@ -6,7 +6,6 @@
                     <v-container>
                         <v-row>
                             <v-col cols="12">
-                                <!-- <v-text-field label="Шифр" v-model="modalData.id_code"></v-text-field> -->
                                 <v-text-field label="Назва" v-model="modalData.title"></v-text-field>
                             </v-col>
                         </v-row>
@@ -36,25 +35,45 @@
             :loading-text="loading ? 'Завантаження' : ''"
             :items="data"
             :search="search"
-            :footer-props="{'items-per-page-text': 'Рядків на сторінку:', 'items-per-page-all-text': 'Всі'}"
             class="elevation-1"
         >
-        
-            <template v-slot:item.action="{ item }" v-if='url =="/"' >
-                <v-tooltip top>
-                    <template v-slot:activator="{ on }">
-                        <v-icon small class="mx-2" @click="edit(item)" v-on="on">edit</v-icon>
-                    </template>
-                    <span>Редагувати</span>
-                </v-tooltip>
+            <template v-slot:body="{ items }">
+                <tbody>
+                <tr v-for="item in items" :key="item.name">
+                    <td>{{ item.index }}</td>
+                    <td>{{ item.id_code }}</td>
+                    <td>{{ item.title }}</td>
+                    <td  v-if="Array.isArray(item.department)">
+                        <ul>
+                            <li v-for="(department, index) in item.department" v-if="department !== ''" :key="index">
+                                {{ department !=='' ? department : '' }}
+                            </li>
+                        </ul>
+                    </td>
+                    <td v-else>
+                        {{ item.department }}
+                    </td>
+                    <td>
+                        <div v-if='$route.path =="/"'>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon small class="mx-2" @click="edit(item)" v-on="on">edit</v-icon>
+                                </template>
+                                <span>Редагувати</span>
+                            </v-tooltip>
 
-                <v-tooltip top>
-                    <template v-slot:activator="{ on }">
-                        <v-icon small @click="deleteItem(item)" v-on="on">delete</v-icon>
-                    </template>
-                    <span>Видалити</span>
-                </v-tooltip>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon small @click="deleteItem(item)" v-on="on">delete</v-icon>
+                                </template>
+                                <span>Видалити</span>
+                            </v-tooltip>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
             </template>
+
             <template v-slot:no-data>
                 Дані відсутні
             </template>
@@ -69,28 +88,34 @@ export default {
         loading: Boolean,
     },
     data: () => ({
-        url: window.location.pathname,
         dialog: false,  
         search: '',
+        editIndex: null,
         modalData: {
+          title: ''
         },
         headers: [
         {
             text: '№',
             value: 'index',
             width: "10px",
-            sortable: false,
         },
         {
             text: 'ID',
             value: 'id_code',
             width: "10px",
-            sortable: false,
         },
         {
             text: 'Назва',
             align: 'left',
             value: 'title',
+            width: "50%",
+        },
+        {
+            text: 'Кафедра',
+            align: 'left',
+            value: 'department',
+            width: "40%",
         },
         {
             text: '',
@@ -102,10 +127,11 @@ export default {
         ],
     }),
     methods: {
- 
+
         edit(item) {
+            Object.assign(this.modalData, item);
+            this.editIndex = this.data.indexOf(item);
             this.dialog = true;
-            this.modalData = item;
         },
         deleteItem (item) {
             const index = this.data.indexOf(item)
@@ -129,9 +155,10 @@ export default {
                 }
             })
         },
-        
+
         saveEdit() {
-            this.data[this.modalData.index].title = this.modalData.title; 
+            this.data[this.editIndex].title = this.modalData.title;
+            this.data[this.editIndex].titleSort = this.modalData.title.toUpperCase().replace(/ +/g, ' ').trim();
             this.dialog = false;
         }
     }
