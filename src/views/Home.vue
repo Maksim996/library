@@ -126,7 +126,7 @@ export default {
         this.one_table = await data.map((item, index) => {
           return {
             index: index+1,
-            id_code: item["Шифр"],
+            // id_code: item["Шифр"],
             title: item["Назва"],
             department: item["Кафедра"] ? "Кафедра "+item["Кафедра"].toLowerCase() : "",
             titleSort: item["Назва"].toLowerCase().replace(/ +/g, ' ').trim()
@@ -151,7 +151,7 @@ export default {
         this.two_table = await data.map((item, index) => {
           return {
             index: index+1,
-            id_code: item["KOD_DISC"],
+            // id_code: item["KOD_DISC"],
             title: item["NAME_DISC"],
             department: item["NAME_DIV"],
             titleSort: item["NAME_DISC"].toLowerCase().replace(/ +/g, ' ').trim()

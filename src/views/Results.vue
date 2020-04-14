@@ -131,18 +131,19 @@
         var dataTwoTable = this.getTwoTable().slice();
 
         if(dataOneTable && dataTwoTable) {
-          var test1 = this.deleteDuplicated(dataOneTable)
-          var test2 = this.deleteDuplicated(dataTwoTable)
+          var test1 = dataOneTable
+          var test2 = dataTwoTable
 
           for (let i = 0; i < test1.length; i++) {
             for (let j = 0; j < test2.length; j++) {
-              if(test1[i].title == test2[j].title) {
+              if(test1[i].titleSort == test2[j].titleSort && test1[i].department == test2[j].department) {
                 this.similar.push({
                   index: test2[j].index,
-                  id_code: test2[j].id_code,
+                  // id_code: test2[j].id_code,
                   title: test2[j].title,
                   titleSort: test2[j].titleSort,
-                  department: [...new Set(test1[i].department.concat(test2[j].department))]
+                  department: test2[j].department
+                  // department: [...new Set(test1[i].department.concat(test2[j].department))]
                 });
               }
             }
@@ -150,12 +151,12 @@
 
           for (let i = 0; i < this.similar.length; i++) {
             for (let j = 0; j < test1.length; j++) {
-              if(this.similar[i].titleSort == test1[j].titleSort) {
+              if(this.similar[i].titleSort == test1[j].titleSort && this.similar[i].department == test1[j].department) {
                 test1.splice(j, 1);
               }
             }
             for (let k = 0; k < test2.length; k++) {
-              if(this.similar[i].titleSort == test2[k].titleSort) {
+              if(this.similar[i].titleSort == test2[k].titleSort && this.similar[i].department == test2[k].department) {
                 test2.splice(k, 1);
               }
             }

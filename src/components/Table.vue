@@ -41,7 +41,7 @@
                 <tbody>
                 <tr v-for="item in items" :key="item.name">
                     <td>{{ item.index }}</td>
-                    <td>{{ item.id_code }}</td>
+                    <!-- <td>{{ item.id_code }}</td> -->
                     <td>{{ item.title }}</td>
                     <td  v-if="Array.isArray(item.department)">
                         <ul>
@@ -100,11 +100,11 @@ export default {
             value: 'index',
             width: "10px",
         },
-        {
-            text: 'ID',
-            value: 'id_code',
-            width: "10px",
-        },
+        // {
+        //     text: 'ID',
+        //     value: 'id_code',
+        //     width: "10px",
+        // },
         {
             text: 'Назва',
             align: 'left',
