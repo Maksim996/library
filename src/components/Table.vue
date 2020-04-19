@@ -21,7 +21,7 @@
         <v-row>
             <v-col class="col-12 d-flex justify-center">
               <v-btn
-                v-if="$route.results"
+                v-if="this.$route.name==='results'"
                 :disabled="loadingBtn || items.length == 0"
                 :loading="loadingBtn"
                 color="success"
@@ -29,6 +29,7 @@
                 large
                 @click="downloadFile()"
                 >
+               
                   Зберегти
                 <v-icon right dark>save</v-icon>
               </v-btn>
