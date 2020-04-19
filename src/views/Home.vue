@@ -24,7 +24,7 @@
     </v-row>
     <v-row>
       <v-col class="py-0">
-        <v-btn  large color="success" @click="compare()" to="/results">Порівняти</v-btn>
+        <v-btn  large color="success" @click="compare()">Порівняти</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -38,31 +38,33 @@
         Бібліотека
       </v-tab>
       <v-tab href="#two_table">
-       АСУ
+        АСУ
       </v-tab>
     </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item value="one_table">
-        <v-card  >
-          <v-btn :disabled="one_table.length == 0" class="my-5 ml-3" large  dark color="purple"  @click="deleteDuplicate('one_table')">Видалення дублікатів</v-btn>
+        <v-card>
           <Table :data="one_table" :loading="loading"></Table>
         </v-card>
       </v-tab-item>
       <v-tab-item value="two_table">
         <v-card>
-          <v-btn :disabled="two_table.length == 0" class="my-5 ml-3" large  dark color="purple"  @click="deleteDuplicate('two_table')">Видалення дублікатів</v-btn>
           <Table :data="two_table" :loading="loading"></Table>
         </v-card>
       </v-tab-item>
     </v-tabs-items>
     </v-col>
     </v-row>
+    <v-card-text class="py-2 text-center">
+      СтудЦІТ
+    </v-card-text>
   </v-container>
 </template>
 
 <script>
 import XLSX from 'xlsx';
 import Table from '../components/Table.vue';
+import { mapMutations, mapGetters } from 'vuex';
 
 export default {
   name: "Home",
@@ -80,84 +82,90 @@ export default {
   created() {
     this.initialize();
   },
+  computed: {
+    ...mapGetters(["getOneTable", "getTwoTable"])
+  },
   methods: {
+    ...mapMutations(["setOneTable", "setTwoTable"]),
+    
     initialize () {
-      if(sessionStorage.getItem('one_table')) {
-        this.one_table = JSON.parse(sessionStorage.getItem('one_table'));
-      }
-      if(sessionStorage.getItem('two_table')) {
-        this.two_table = JSON.parse(sessionStorage.getItem('two_table'));
-      }
+      this.one_table = this.getOneTable;
+      this.two_table = this.getTwoTable;
     },
+    
     readFileAsync(file) {
-        return new Promise((resolve, reject) => {
-            
-            let reader = new FileReader();
-            reader.onload = (e) => {
-                var data = e.target.result;
-                var workbook = XLSX.read(data, {
-                    type: 'binary',
-                    codepage: 1251
-                });
-                workbook.SheetNames.forEach(function(sheetName) {
-                    resolve(XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]));
-                })
-            };
-            reader.onerror = reject;
-            reader.readAsBinaryString(file);
-           
-        })
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          var data = e.target.result;
+          var workbook = XLSX.read(data, {
+            type: 'binary',
+            codepage: 1251
+          });
+          workbook.SheetNames.forEach(function(sheetName) {
+            resolve(XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]));
+          })
+        };
+        reader.onerror = reject;
+        reader.readAsBinaryString(file);
+      })
     },
 
     async readFileLibrary(event) {
       if(event[0]) {
+        if(event[0].name.match(/xls/) == null) {
+          this.$swal({
+            icon: 'error',
+            title: 'Помилка',
+            text: 'Невірний формат файлу. Підтримуються формати: .xls, xslx'
+          })
+          return;
+        }
         this.loading = true;
-        // console.log(this.loading);
         let data = await this.readFileAsync(event[0]);
         this.one_table = await data.map((item, index) => {
           return {
-            index,
-            id_code: item["Шифр"],
-            title: item["Назва"]
+            index: index+1,
+            // id_code: item["Шифр"],
+            title: item["Назва"],
+            department: item["Кафедра"] ? "Кафедра "+item["Кафедра"].toLowerCase() : "",
+            titleSort: item["Назва"].toLowerCase().replace(/ +/g, ' ').trim()
           }
-        })
-                
+        });
         this.loading = false;
       }
     },
 
     async readFileASU(event) {
-       this.loading = true;
       if(event[0]) {
+        if(event[0].name.match(/csv/) == null) {
+          this.$swal({
+            icon: 'error',
+            title: 'Помилка',
+            text: 'Невірний формат файлу. Підтримуються формати: .csv'
+          })
+          return;
+        }
+        this.loading = true;
         let data = await this.readFileAsync(event[0]);
         this.two_table = await data.map((item, index) => {
           return {
-            index,
-            id_code: item["KOD_DISC"],
-            title: item["NAME_DISC"]
+            index: index+1,
+            // id_code: item["KOD_DISC"],
+            title: item["NAME_DISC"],
+            department: item["NAME_DIV"],
+            titleSort: item["NAME_DISC"].toLowerCase().replace(/ +/g, ' ').trim()
           }
         })
         this.loading = false;
       }
     },
-    deleteDuplicate(array) {
-      this[array] = this[array].sort(function(a,b){return a.title < b.title ? -1 : 1;}).reduce(function(arr, el) {
-        if(!arr.length || arr[arr.length - 1].title != el.title) {
-            arr.push(el);
-        }
-        return arr;
-      }, []);
-    },
-    compare(){
-          sessionStorage.setItem('one_table', JSON.stringify(this.one_table));
-          sessionStorage.setItem('two_table', JSON.stringify(this.two_table));
-    },
-
-
-  },
-  computed: {
     
+    compare() {
+      this.setOneTable(this.one_table);
+      this.setTwoTable(this.two_table);
+      this.$router.push("/results");
+    }
   }
-  
 };
 </script>
